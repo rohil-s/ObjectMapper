@@ -3,12 +3,49 @@
  */
 package jackson;
 
-public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
+import java.util.Map;
 
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class App {
+
+    private static ObjectMapper mapper;
+
+    public static void main(String[] args) throws JsonMappingException, JsonProcessingException {
+        mapper = new ObjectMapper();
+        Map<String, Integer> map = mapper.readValue("{\"number\":123}", new TypeReference<Map<String, Integer>>() {
+        });
+        System.out.println(map);
+        String originalValue = mapper.writeValueAsString(map);
+        System.out.println(originalValue);
+
+        Converter con1 = Converter.builder()
+                .serializer(Serializer.GSON)
+                .unit(MetricUnits.KILOMETERS)
+                .metaField("Test")
+                .model(DataModel.builder().test("Test").build())
+                .customName("new test")
+                .build();
+        String serializer = mapper.writeValueAsString(con1);
+        System.out.println(serializer);
+        Converter converter = mapper.readValue(
+                "{" +
+                        "\"serializer\":\"Jackson\"," +
+                        "\"unit\":\"meter\", " +
+                        "\"metaField\": \"test\"," +
+                        "\"model\": {\"test\": \"test\"}," +
+                        "\"custom_name\":\"test old\"," +
+                        "\"void\":\"test old\"" +
+                        "}",
+                Converter.class);
+        System.out.println(converter.getSerializer().getValue());
+        System.out.println(converter.getUnit().toString());
+        System.out.println(converter.getMetaField());
+        System.out.println(converter.getModel());
+        System.out.println(converter.getCustomName());
+        return;
     }
 }

@@ -19,10 +19,14 @@ repositories {
 dependencies {
     // Use JUnit test framework.
     testImplementation 'junit:junit:4.13.2'
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+	annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:31.0.1-jre'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.16.1'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.16.1'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.16.1'
 }
 
 application {
